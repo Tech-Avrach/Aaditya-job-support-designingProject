@@ -1,0 +1,47 @@
+table tr td {
+  border: 1px solid gray;
+}
+
+.table_wrapper {
+  max-height: 500px; /* Set your desired fixed height */
+  overflow-y: auto;
+
+  /* Custom scrollbar styles */
+  &::-webkit-scrollbar {
+    width: 6px; /* Width of the vertical scrollbar */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #6c0cdc; /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners for the thumb */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the scrollbar thumb on hover */
+  }
+}
+
+.table_container {
+  width: 100%;
+  border-collapse: separate;
+  border: 1px solid gray;
+}
+
+.table_container thead th {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+.fade-bg {
+  height: 100%;
+  width: 100%;
+  background-color: #f1f1f1d1;
+  position: absolute;
+  z-index: 9999;
+}

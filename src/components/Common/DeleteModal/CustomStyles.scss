@@ -1,0 +1,16 @@
+.modal-backdrop.blur {
+    background-color: rgba(0, 0, 0, 0.425);
+   
+    backdrop-filter: blur(10px);
+  }
+  
+  .blur-background-modal .modal-content {
+    position: relative;
+  }
+  
+  .modal-backdrop {
+    background-color: #00000003;
+  }
+  .modal-dialog{
+    box-shadow: 5px 6px 17px #22222208;
+  }
