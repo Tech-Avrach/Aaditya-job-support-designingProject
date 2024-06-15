@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Card,
@@ -12,19 +13,23 @@ import {
   Label,
   Row,
 } from "reactstrap";
-import TableComponent from "./TableComponent";
-import { useDispatch } from "react-redux";
-import { createTranscript } from "../../redux/actions/tranScript";
+import {
+  getCombinedTranscript,
+  getTranscript,
+} from "../../redux/actions/tranScript";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AvailableTableComponent from "./AvailableTranscriptTable";
 import Loader from "react-loaders";
 
 toast.configure();
 
-const IndividualRequestTranscript = ({ userDetail }) => {
-  const navigate = useNavigate();
+const IndividualAvailableTranscripts = ({ userDetail }) => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  const [isCombineloading, setIsCombineloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { tranScriptDetails } = useSelector((state) => state.transcript);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const handleSelectAllChange = () => {
     const newSelectAllState = !selectAllChecked;
@@ -53,12 +58,11 @@ const IndividualRequestTranscript = ({ userDetail }) => {
       return newTranscripts;
     });
   };
-
   // Default All Select
   useEffect(() => {
     handleSelectAllChange();
   }, []);
-
+  //Select All by Group By
   //Select All by Group By
   const [checkboxStates, setCheckboxStates] = useState({
     // taxReturnAcco: false,
@@ -69,98 +73,19 @@ const IndividualRequestTranscript = ({ userDetail }) => {
     civilPenality: false,
     separateAssessment: false,
   });
-
   const initialState = {
-    // Individual Tax Return Acco Transcripts
-    // taxReturnAcco: [
-    //   {
-    //     formNumber: 1040,
-    //     fromTaxYear: "2022",
-    //     toTaxYear: "2023",
-    //     productType: "RETR",
-    //     purposeType: "HUD",
-    //     taxFormTypeId: 5,
-    //   },
-    // ],
     // Individual Tax Return Account Transcripts
-    taxReturnAccount: [
-      {
-        formNumber: "1040",
-        fromTaxYear: "2020",
-        toTaxYear: "2023",
-        productType: "RETR",
-        purposeType: "HUD",
-        taxFormTypeId: 5,
-        quarterFrom: "",
-        quarterTo: "",
-      },
-    ],
+    taxReturnAccount: [],
     // Record of Account Transcripts
-    returnOfAccount: [
-      {
-        formNumber: "1040",
-        fromTaxYear: "2020",
-        toTaxYear: "2023",
-        productType: "RECA",
-        purposeType: "HUD",
-        taxFormTypeId: 6,
-        quarterFrom: "",
-        quarterTo: "",
-      },
-    ],
+    returnOfAccount: [],
     // Verification of non-filing Transcript
-    verficationOfnonfiling: [
-      {
-        formNumber: "1040",
-        fromTaxYear: "2020",
-        toTaxYear: "2023",
-        productType: "VENF",
-        purposeType: "HUD",
-        taxFormTypeId: 7,
-        quarterFrom: "",
-        quarterTo: "",
-      },
-    ],
+    verficationOfnonfiling: [],
     // Wages & Income Transcript
-    wagesIncome: [
-      {
-        formNumber: "ALL FORMS",
-        fromTaxYear: "2020",
-        toTaxYear: "2023",
-        productType: "WAID",
-        purposeType: "HUD",
-        taxFormTypeId: 8,
-        quarterFrom: "",
-        quarterTo: "",
-      },
-    ],
+    wagesIncome: [],
     // Civil Penalty Transcript
-    civilPenality: [
-      {
-        formNumber: "1040",
-        fromTaxYear: "2020",
-        toTaxYear: "2023",
-        productType: "ACTR",
-        purposeType: "HUD",
-        taxFormTypeId: 4,
-        quarterFrom: "",
-        quarterTo: "",
-      },
-    ],
+    civilPenality: [],
     // Separate Assessment Transcript
-
-    separateAssessment: [
-      {
-        formNumber: "1040 SEPARATE ASSESSMENT",
-        fromTaxYear: "2020",
-        toTaxYear: "2023",
-        productType: "ACTR",
-        purposeType: "HUD",
-        taxFormTypeId: 9,
-        quarterFrom: "",
-        quarterTo: "",
-      },
-    ],
+    separateAssessment: [],
   };
 
   const [transcripts, setTranscripts] = useState(initialState);
@@ -171,6 +96,8 @@ const IndividualRequestTranscript = ({ userDetail }) => {
     let allChecked = true;
     if (field === "quarterFrom" || field === "quarterTo") {
       newTranscripts[index][field] = year;
+    } else if (field === "quarter") {
+      newTranscripts[index][field] = year;
     } else if (field === "isChecked") {
       newTranscripts[index][field] = year;
     } else if (
@@ -179,7 +106,6 @@ const IndividualRequestTranscript = ({ userDetail }) => {
       newTranscripts[index].toTaxYear !== ""
     ) {
       // alert("From year cannot be later than To year.");
-
       toast("From year cannot be later than To year!", {
         transition: Slide,
 
@@ -191,6 +117,7 @@ const IndividualRequestTranscript = ({ userDetail }) => {
 
         type: "error",
       });
+
       return;
     } else if (
       field === "toTaxYear" &&
@@ -198,7 +125,6 @@ const IndividualRequestTranscript = ({ userDetail }) => {
       newTranscripts[index].fromTaxYear !== ""
     ) {
       // alert("To year cannot be earlier than From year.");
-
       toast("To year cannot be earlier than From year!", {
         transition: Slide,
 
@@ -272,7 +198,7 @@ const IndividualRequestTranscript = ({ userDetail }) => {
         onChange={() => handleCheckboxChange(groupKey)}
       />
       <Label className="ms-3">{label}</Label>
-      <TableComponent
+      <AvailableTableComponent
         transcripts={transcripts[groupKey]}
         handleYearChange={(index, field, year) =>
           handleYearChange(groupKey, index, field, year)
@@ -284,53 +210,171 @@ const IndividualRequestTranscript = ({ userDetail }) => {
     </FormGroup>
   );
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [formId] = useState({
+    "Business Tax Return Account Transcipts": 1,
+    "Payroll Tax Account Transcipts": 2,
+    "Tax Return Transcipts": 3,
+    "Civil Penalty Transcipts": 4,
+    "Individual Tax Return Account Transcipts": 5,
+    "Record of Account Transcipts": 6,
+    "Verification of non-billing Transcipts": 7,
+    "Wages & Income Transcipts": 8,
+    "Separate Assessment Transcipts": 9,
+  });
+
+  useEffect(() => {
+    const handlesetPrifilled = () => {
+      const newState = {
+        taxReturnAccount: [],
+        returnOfAccount: [],
+        verficationOfnonfiling: [],
+        wagesIncome: [],
+        civilPenality: [],
+        separateAssessment: [],
+      };
+      tranScriptDetails?.forEach((item) => {
+        switch (item.taxFormTypeId) {
+          case formId["Individual Tax Return Account Transcipts"]:
+            newState.taxReturnAccount.push({
+              ...item,
+              isChecked: true,
+            });
+            break;
+          case formId["Record of Account Transcipts"]:
+            newState.returnOfAccount?.push({ ...item, isChecked: true });
+            break;
+          case formId["Tax Return Transcipts"]:
+            newState.taxReturn?.push({ ...item, isChecked: true });
+            break;
+          case formId["Verification of non-billing Transcipts"]:
+            newState.verficationOfnonfiling?.push({ ...item, isChecked: true });
+            break;
+          case formId["Wages & Income Transcipts"]:
+            newState.wagesIncome?.push({ ...item, isChecked: true });
+            break;
+          case formId["Civil Penalty Transcipts"]:
+            newState.civilPenality?.push({ ...item, isChecked: true });
+            break;
+          case formId["Separate Assessment Transcipts"]:
+            newState.separateAssessment?.push({ ...item, isChecked: true });
+            break;
+        }
+      });
+      setTranscripts(newState);
+    };
+    handlesetPrifilled();
+  }, [tranScriptDetails]);
+
+  console.log("tranScriptDetails",tranScriptDetails)
+  console.log("userDetails",userDetail)
+  
+  // Get Transcript Details
+  useEffect(() => {
+    const handlegetTranscript = (Id) => {
+      setIsLoading(true);
+      dispatch(getTranscript(Id))
+        .then((response) => {
+          setIsLoading(false);
+          // toast("Transcript Added successfully!", {
+          //   transition: Slide,
+          //   closeButton: true,
+          //   autoClose: 3000,
+          //   position: "top-right",
+          //   type: "success", // info/success/warning/error
+          // });
+          // navigate("/account/list");
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          toast(error.response?.data?.message, {
+            transition: Slide,
+
+            closeButton: true,
+
+            autoClose: 3000,
+
+            position: "top-right",
+
+            type: "error",
+          });
+        });
+    };
+    if (userDetail?.id != "") {
+      handlegetTranscript(userDetail?.id);
+    }
+  }, [userDetail?.id]);
+
+  async function downloadFromUrl(url, filename) {
+    try {
+      filename = url.split("/transcripts").pop();
+      const response = await fetch(url);
+      if (response.ok) {
+        const blob = await response.blob();
+        // Create a URL for the blob object
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        // Create an <a> element to download the blob
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = filename;
+
+        // Append the link, trigger the download, then remove the link
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Revoke the blob URL after download
+        window.URL.revokeObjectURL(blobUrl);
+        setIsCombineloading(false);
+      } else {
+        throw new Error("Failed to download file: " + response.statusText);
+      }
+    } catch (error) {
+      console.error("Error downloading the file", error);
+    }
+  }
+
+  // Download Multiple
+  function downloadMultipleFiles(files) {
+    files.pdfFilesId.forEach((file, index) => {
+      let fileUrl = process.env.REACT_APP_TRANSCRIPT_URL + `${file}`;
+      setTimeout(() => {
+        downloadFromUrl(fileUrl);
+      }, index * 500);
+    });
+  }
 
   const handlePayload = () => {
-    const transcriptDetails = [
-      // ...transcripts.taxReturnAcco,
+    const _pdfFilesId = [
       ...transcripts.taxReturnAccount,
       ...transcripts.returnOfAccount,
       ...transcripts.verficationOfnonfiling,
       ...transcripts.wagesIncome,
       ...transcripts.civilPenality,
       ...transcripts.separateAssessment,
-    ].filter((item) => item.isChecked);
+    ]
+      .filter((item) => item.isChecked) // Filter to get only checked items
+      .map((item) => item.id.toString());
     const payload = {
-      taxId: userDetail.taxId || "",
-      type: userDetail.type,
-      publicId: userDetail.publicId,
       accountId: userDetail.id,
-      cafNumber: userDetail.TaxPro?.cafNumber || "",
-      legalBusinessName: userDetail.legalBusinessName,
-      firstName: userDetail.firstName || "",
-      lastName: userDetail.lastName || "",
-      transcriptsDetails: transcriptDetails,
+      pdfFilesId: _pdfFilesId,
     };
 
     return payload;
   };
-  const addHandler = (event) => {
-    event.preventDefault();
-    setIsLoading(true);
+
+  const handleCombineDownload = () => {
     const payload = handlePayload();
-    dispatch(createTranscript(payload))
+    dispatch(getCombinedTranscript(payload))
       .then((response) => {
-        toast("Transcript Added successfully!", {
-          transition: Slide,
-
-          closeButton: true,
-
-          autoClose: 3000,
-
-          position: "top-right",
-
-          type: "success", // info/success/warning/error
-        });
-        setIsLoading(false);
-        // navigate("/account/list");
+        setIsCombineloading(true);
+        let fileUrl =
+          process.env.REACT_APP_TRANSCRIPT_URL +
+          `${response.combinedTranscripts}`;
+        downloadFromUrl(fileUrl);
       })
       .catch((error) => {
+        setIsCombineloading(false);
         toast(error.response?.data?.message, {
           transition: Slide,
 
@@ -342,11 +386,42 @@ const IndividualRequestTranscript = ({ userDetail }) => {
 
           type: "error",
         });
-        setIsLoading(false);
       });
   };
 
-  // Handle is All Checked
+  const handleSingalPayload = () => {
+    const _pdfFilesId = [
+      ...transcripts.taxReturnAccount,
+      ...transcripts.returnOfAccount,
+      ...transcripts.verficationOfnonfiling,
+      ...transcripts.wagesIncome,
+      ...transcripts.civilPenality,
+      ...transcripts.separateAssessment,
+    ]
+      .filter((item) => item.isChecked) // Filter to get only checked items
+      .map((item) => item.transcriptPath);
+    const payload = {
+      pdfFilesId: _pdfFilesId,
+    };
+    return payload;
+  };
+
+  const handleSingaleDownload = () => {
+    const paths = handleSingalPayload();
+    downloadMultipleFiles(paths);
+  };
+
+  // Download Created Transcript
+  const handleDownlodedScript = () => {
+    const downloadedTranscript = userDetail?.Report?.reportPath;
+    let paths = { pdfFilesId: [downloadedTranscript] };
+    downloadMultipleFiles(paths);
+  };
+
+  const areAllKeysEmpty = (state) => {
+    return Object.values(state).every((arr) => arr.length === 0);
+  };
+
   const isAllChecked = () => {
     const _pdfFilesId = [
       ...transcripts.taxReturnAccount,
@@ -357,7 +432,7 @@ const IndividualRequestTranscript = ({ userDetail }) => {
       ...transcripts.separateAssessment,
     ]
       .filter((item) => item.isChecked) // Filter to get only checked items
-      ?.map((item) => item.id?.toString());
+      ?.map((item) => item?.id.toString());
     return _pdfFilesId.length;
   };
 
@@ -367,16 +442,15 @@ const IndividualRequestTranscript = ({ userDetail }) => {
         <Card className="main-card mb-3">
           <Form>
             <CardBody>
-              <Row>
-                <Col md="6">
+              {/* <Row>
+                <Col md="5">
                   <FormGroup>
                     <Label for="select_all" className="ms-3">
-                      Available Transcripts to request - Individual
+                      Available Transcripts
                     </Label>
                   </FormGroup>
                 </Col>
-              </Row>
-
+              </Row> */}
               {isLoading ? (
                 <Row className="justify-content-center align-items-center fade-bg">
                   <Col xs="2">
@@ -386,9 +460,8 @@ const IndividualRequestTranscript = ({ userDetail }) => {
               ) : (
                 <></>
               )}
-
               <Row>
-                <Col md="6">
+                <Col md="2">
                   <FormGroup>
                     <Input
                       id="selectAll"
@@ -402,18 +475,50 @@ const IndividualRequestTranscript = ({ userDetail }) => {
                     </Label>
                   </FormGroup>
                 </Col>
+                <Col md="4">
+                  <Row className="justify-content-end">
+                    <Col xs="5">
+                      <Button
+                        color="primary mb-2"
+                        disabled={!userDetail?.Report?.reportPath}
+                        onClick={() => handleDownlodedScript()}
+                      >
+                        Download Report
+                      </Button>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col className="mb-2" md="3">
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      handleCombineDownload();
+                    }}
+                    disabled={
+                      areAllKeysEmpty(tranScriptDetails) ||
+                      !isAllChecked() ||
+                      isCombineloading
+                    }
+                  >
+                    Download selected transcript combined
+                  </Button>
+                </Col>
+                <Col className="mb-4" md="3">
+                  <Button
+                    color="primary"
+                    onClick={() => handleSingaleDownload()}
+                    disabled={
+                      areAllKeysEmpty(tranScriptDetails) ||
+                      !isAllChecked() ||
+                      isCombineloading
+                    }
+                  >
+                    Download selected transcript separately
+                  </Button>
+                </Col>
               </Row>
 
               <Row>
-                {/* <Col md="4">
-                  {renderGroup(
-                    "taxReturnAcco",
-                    "Individual Tax Return Acco Transcripts",
-                    false,
-                    2020,
-                    new Date().getFullYear() - 1
-                  )}
-                </Col> */}
                 <Col md="4">
                   {renderGroup(
                     "taxReturnAccount",
@@ -434,15 +539,15 @@ const IndividualRequestTranscript = ({ userDetail }) => {
                   )}
                 </Col>
               </Row>
-
+              <hr />
               <Row>
                 <Col md="4">
                   {renderGroup(
                     "verficationOfnonfiling",
                     "Verification of non-filing Transcript",
                     false,
-                    2020,
-                    new Date().getFullYear() - 1
+                    1990,
+                    new Date().getFullYear()
                   )}
                 </Col>
                 <Col md="4">
@@ -450,8 +555,8 @@ const IndividualRequestTranscript = ({ userDetail }) => {
                     "wagesIncome",
                     "Wages & Income Transcript",
                     false,
-                    2020,
-                    new Date().getFullYear() - 1
+                    1990,
+                    new Date().getFullYear()
                   )}
                 </Col>
                 <Col md="4">
@@ -459,8 +564,8 @@ const IndividualRequestTranscript = ({ userDetail }) => {
                     "civilPenality",
                     "Civil Penalty Transcript",
                     false,
-                    2020,
-                    new Date().getFullYear() - 1
+                    1990,
+                    new Date().getFullYear()
                   )}
                 </Col>
               </Row>
@@ -470,8 +575,8 @@ const IndividualRequestTranscript = ({ userDetail }) => {
                     "separateAssessment",
                     "Separate Assessment Transcript",
                     false,
-                    2020,
-                    new Date().getFullYear() - 1
+                    1990,
+                    new Date().getFullYear()
                   )}
                 </Col>
               </Row>
@@ -486,14 +591,6 @@ const IndividualRequestTranscript = ({ userDetail }) => {
               >
                 Cancel
               </Button>
-              <Button
-                size="lg"
-                color="primary"
-                disabled={isLoading || !isAllChecked()}
-                onClick={addHandler}
-              >
-                Submit
-              </Button>
             </CardFooter>
           </Form>
         </Card>
@@ -502,4 +599,4 @@ const IndividualRequestTranscript = ({ userDetail }) => {
   );
 };
 
-export default IndividualRequestTranscript;
+export default IndividualAvailableTranscripts;

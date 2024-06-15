@@ -282,7 +282,7 @@ const BusinessRequestTranscript = ({ userDetail }) => {
   const handleYearChange = (group, index, field, year) => {
     const selectedYear = parseInt(year, 10);
     const newTranscripts = [...transcripts[group]];
-    newTranscripts[index][field] = selectedYear;
+    newTranscripts[index][field] = year;
     let allChecked = true;
     if (field === "quarterFrom" || field === "quarterTo") {
       newTranscripts[index][field] = year;
@@ -470,22 +470,21 @@ const BusinessRequestTranscript = ({ userDetail }) => {
       });
   };
 
-  console.log("transcripts==>", transcripts?.payrollTaxAccount);
   return (
     <Row>
       <Col md="12">
         <Card className="main-card mb-3">
           <Form>
             <CardBody>
-              {
-                isLoading ?
-                  <Row className="justify-content-center align-items-center fade-bg">
-                    <Col xs="1">
-                      <Loader type="ball-spin-fade-loader"/>
-                    </Col>
-                  </Row>
-                  : <></>
-              }
+              {isLoading ? (
+                <Row className="justify-content-center align-items-center fade-bg">
+                  <Col xs="1">
+                    <Loader type="ball-spin-fade-loader" />
+                  </Col>
+                </Row>
+              ) : (
+                <></>
+              )}
               <Row>
                 <Col md="6">
                   <FormGroup>

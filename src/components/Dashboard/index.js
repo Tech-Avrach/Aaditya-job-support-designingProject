@@ -334,19 +334,19 @@ function Dashboard() {
 
               <IconContainer
                 id={row.status ? "deactivate-icon" : "active-icon"}
-                Icon={row.status ? InactiveIcon : ActiveIcon}
+                Icon={row.status ? ActiveIcon : InactiveIcon}
                 handleOnClick={(e) =>
                   row.status
                     ? handleStatusChange(e, row.id, 0)
                     : handleStatusChange(e, row.id, 1)
                 }
                 text={row.status ? "Deactivate" : "Activate"}
-                iconColor={row.status ? "#d92550" : "#3ac47d"}
+                iconColor={row.status ? "#3ac47d" : "#d92550"}
               />
               <IconContainer
                 id={row.isEmailEnabled ? "disable-icon" : "enable-icon"}
                 Icon={
-                  row.isEmailEnabled ? DisableNotification : EnableNotification
+                  row.isEmailEnabled ? EnableNotification : DisableNotification
                 }
                 handleOnClick={(e) =>
                   row.isEmailEnabled
@@ -358,7 +358,7 @@ function Dashboard() {
                     ? "Disable Email Notification"
                     : "Enable Email Notification"
                 }
-                iconColor={row.isEmailEnabled ? "#d92550" : "#3ac47d"}
+                iconColor={row.isEmailEnabled ? "#3ac47d" : "#d92550"}
               />
               <IconContainer
                 id={"delete-icon"}
@@ -434,7 +434,6 @@ function Dashboard() {
           className="align-items-center mb-3 justify-content-between"
           style={{ width: "100%", margin: "auto" }}
         >
-          <Col md="2">
             {/* <Input
               type="select"
               value={statusFilter.active}
@@ -444,26 +443,27 @@ function Dashboard() {
               <option value="1">Active</option>
               <option value="0">Inactive</option>
             </Input> */}
+          {/* <Col md="2">
              <Input
-            name="selectAll"
-            type="checkbox"
-            // checked={checkboxStates[groupKey]}
-            checked
-            // onChange={() => handleCheckboxChange(groupKey)}
-      />
-        <Label className="ms-3">Select All</Label>
-          </Col>
-          <Col md="2">
+                name="selectAll"
+                type="checkbox"
+                // checked={checkboxStates[groupKey]}
+                checked
+                // onChange={() => handleCheckboxChange(groupKey)}
+          />
+            <Label className="ms-3">Select All</Label>
+          </Col> */}
+          {/* <Col md="2">
            <Button size="lg" color="primary" onClick={handleAddAccount}>
              Get Transcipts
             </Button>
-          </Col>
+          </Col> */}
           <Col md="2">
             <Button size="lg" color="primary" onClick={handleAddAccount}>
               Add Account
             </Button>
           </Col>
-          <Col md="6">
+          <Col md="4">
           {subHeaderComponent}
           </Col>
         </Row>

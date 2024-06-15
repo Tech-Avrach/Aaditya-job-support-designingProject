@@ -11,6 +11,7 @@ import { toast, Slide } from "react-toastify";
 import RequestTranscripts from "./RequestTranscripts";
 import AvailableTranscripts from "./AvailableTranscripts";
 import "react-toastify/dist/ReactToastify.css";
+import AddTranscripts from "./AddTranscripts";
 
 toast.configure();
 
@@ -40,42 +41,46 @@ const AddAccount = () => {
   };
 
   useEffect(() => {
-    if (id != "" && /\d+/.test(id)) getAccount(id);
+    if (id != "") {
+      getAccount(id);
+    }
   }, [id]);
-  // console.log("userDetail",userDetail)
 
   return (
     <PageContainer
       pageTitleIcon="pe-7s-add-user icon-gradient bg-plum-plate"
-      pageHeading={id != "" && /\d+/.test(id) ? "Edit Account" : "Add Account"}
-      pageSubTitle={
-        id != "" && /\d+/.test(id) ? "Edit Account" : "Add new account"
-      }
+      pageHeading={id != "" ? "Edit Account" : "Add Account"}
+      pageSubTitle={id != "" ? "Edit Account" : "Add new account"}
     >
-    {!id ? (<AddAccountInformation userDetail={userDetail} />)
-    
-    : 
-      <Tabs
-        defaultActiveKey="1"
-        renderTabBar={() => <ScrollableInkTabBar />}
-        renderTabContent={() => <TabContent />}
-      >
-        <TabPane tab="Account Information" key="1">
-          <AddAccountInformation userDetail={userDetail} />
-        </TabPane>
+      {!id ? (
+        <AddAccountInformation userDetail={userDetail} />
+      ) : (
+        <Tabs
+          defaultActiveKey="1"
+          renderTabBar={() => <ScrollableInkTabBar />}
+          renderTabContent={() => <TabContent />}
+        >
+          <TabPane tab="Account Information" key="1">
+            <AddAccountInformation userDetail={userDetail} />
+          </TabPane>
 
-        {id && (
-          <TabPane tab="Request Transcripts" key="2">
-            <RequestTranscripts userDetail={userDetail} />
-          </TabPane>
-        )}
-        {id && (
-          <TabPane tab="Available Transcripts" key="3">
-            <AvailableTranscripts userDetail={userDetail} />
-          </TabPane>
-        )}
-      </Tabs>
-    }
+          {/* {id && (
+            <TabPane tab="Request Transcripts" key="2">
+              <RequestTranscripts userDetail={userDetail} />
+            </TabPane>
+          )} */}
+          {id && (
+            <TabPane tab="Request Transcripts" key="2">
+              <AddTranscripts userDetail={userDetail} />
+            </TabPane>
+          )}
+          {id && (
+            <TabPane tab="Available Transcripts" key="3">
+              <AvailableTranscripts userDetail={userDetail} />
+            </TabPane>
+          )}
+        </Tabs>
+      )}
     </PageContainer>
   );
 };

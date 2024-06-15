@@ -75,13 +75,12 @@ const AddAccountInformation = ({ userDetail }) => {
       dispatch(updateUserType(value));
       const selectedId = parseInt(value);
       setType(selectedId);
-      console.log("value is 1", typeof value, value === 1);
       if (value !== "1") {
         setCurrentUser((prev) => {
           return {
             ...prev,
             [name]: value,
-            taxId: "",
+            // taxId: "",
           };
         });
       } else {
@@ -89,7 +88,7 @@ const AddAccountInformation = ({ userDetail }) => {
           return {
             ...prev,
             [name]: value,
-            federalTaxId: "",
+            // federalTaxId: "",
           };
         });
       }
@@ -164,7 +163,7 @@ const AddAccountInformation = ({ userDetail }) => {
       const emailRegex =
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-      if (!emailRegex.test(inputValue) || inputValue.length === 0) {
+      if (!emailRegex.test(inputValue) && inputValue.length !== 0) {
         setEmailErr("Please enter a valid email address!");
       } else {
         setEmailErr("");
@@ -202,13 +201,16 @@ const AddAccountInformation = ({ userDetail }) => {
     let errorCount = 0;
     if (currentUser.type != 1) {
       // Tax Id Validation
+      const federalTaxIdRegex = /^\d{3}-\d{2}-\d{4}$/;
+
       if (
         currentUser.taxId === null ||
         currentUser.taxId === "" ||
-        currentUser.taxId === undefined
+        currentUser.taxId === undefined ||
+        !federalTaxIdRegex.test(currentUser.taxId)
       ) {
         errorCount++;
-        setTaxIdErr("Tax Id is required!");
+        setTaxIdErr("Please enter a valid Tax Id! XXX-XX-XXXX");
       } else {
         setTaxIdErr("");
       }
@@ -255,13 +257,16 @@ const AddAccountInformation = ({ userDetail }) => {
         setlegalBusinessNameErr("");
       }
       //federalTaxId
+      const federalTaxIdRegex = /^\d{2}-\d{7}$/;
+
       if (
         currentUser.federalTaxId === null ||
         currentUser.federalTaxId === "" ||
-        currentUser.federalTaxId === undefined
+        currentUser.federalTaxId === undefined ||
+        !federalTaxIdRegex.test(currentUser.federalTaxId)
       ) {
         errorCount++;
-        setFederalTaxIdErr("Tax Id is required!");
+        setFederalTaxIdErr("Please enter a valid Federal Tax Id! XX-XXXXXXX");
       } else {
         setFederalTaxIdErr("");
       }
@@ -287,7 +292,7 @@ const AddAccountInformation = ({ userDetail }) => {
             type: "success", // info/success/warning/error
           });
           // setCurrentUser({});
-          navigate("/account/list");
+          // navigate("/account/list");
         })
         .catch((error) => {
           toast(error.response.data.message, {
@@ -487,6 +492,9 @@ const AddAccountInformation = ({ userDetail }) => {
       //dispatch to update the user
       dispatch(createAccount(formData))
         .then((response) => {
+          // console.log("response", response);
+          // "kHz3usE5"
+          let _publicId = response.data?.accountDetails?.TaxPro?.publicId;
           setCurrentUser({ ...currentUser });
           toast("Account Added successfully!", {
             transition: Slide,
@@ -500,7 +508,7 @@ const AddAccountInformation = ({ userDetail }) => {
             type: "success", // info/success/warning/error
           });
           setCurrentUser({});
-          navigate("/account/list");
+          // navigate(`/account/${_publicId}`);
         })
         .catch((error) => {
           toast(error.response.data.message, {
@@ -576,7 +584,7 @@ const AddAccountInformation = ({ userDetail }) => {
 
   return (
     <Row>
-      <Col md={{ size: 1, offset: 11 }} className="d-flex justify-content-end">
+      {/* <Col md={{ size: 1, offset: 11 }} className="d-flex justify-content-end">
         <IconContainer
           id="edit-icon"
           fontSize={"25px"}
@@ -584,7 +592,7 @@ const AddAccountInformation = ({ userDetail }) => {
           handleOnClick={() => {}}
           text="Edit"
         />
-      </Col> 
+      </Col>  */}
       <Col md="12">
         <Card className="main-card mb-3">
           <Form>
@@ -706,8 +714,8 @@ const AddAccountInformation = ({ userDetail }) => {
                     )}
                   </FormGroup>
                 </Col>
-              {currentUser?.type == 1 && (
-                <>
+                {currentUser?.type == 1 && (
+                  <>
                     <Col md="4">
                       <FormGroup>
                         <Label for="legalBusinessName">
@@ -747,10 +755,10 @@ const AddAccountInformation = ({ userDetail }) => {
                         />
                       </FormGroup>
                     </Col>
-                </>
-              )}
-              {currentUser?.type == 0 && (
-                <>
+                  </>
+                )}
+                {currentUser?.type == 0 && (
+                  <>
                     <Col md="4">
                       <FormGroup>
                         <Label for="firstName">
@@ -797,10 +805,10 @@ const AddAccountInformation = ({ userDetail }) => {
                         )}
                       </FormGroup>
                     </Col>
-                </>
-              )}
-              {currentUser?.type == 0 && (
-                <>
+                  </>
+                )}
+                {currentUser?.type == 0 && (
+                  <>
                     <Col md="4">
                       <FormGroup>
                         <Label for="lastName">
@@ -836,8 +844,8 @@ const AddAccountInformation = ({ userDetail }) => {
                         ></input>
                       </FormGroup>
                     </Col>
-                </>
-              )}
+                  </>
+                )}
                 <Col md="4">
                   <FormGroup>
                     <Label for="email">Email</Label>
