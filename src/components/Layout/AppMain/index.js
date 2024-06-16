@@ -16,6 +16,8 @@ const Page = lazy(() => import("../../Account/AddAccount"));
 
 const ListtaxPro = lazy(() => import("../../Taxpros/listtaxPro"));
 const AddTaxpros = lazy(() => import("../../Taxpros"));
+const AddAccountInformation = lazy(() => import("../../Account/AddAccountInformation"));
+const AddTranscripts = lazy(() => import("../../Account/AddTranscripts"));
 
 const AppMain = () => {
   let isLoggedIn = false;
@@ -68,10 +70,12 @@ const AppMain = () => {
           <Route path=":id" element={<AddTaxpros />} />
         </Route>
         <Route path="account">
-          <Route path="add" element={<AddAccount />} />
+          <Route path="add" element={<AddAccount currentUser={currentUser} />} />
           <Route path="list" key="list" element={<Dashboard />} />
-          <Route path=":id" element={<AddAccount />} />
-          <Route path="add" element={<Page currentUser={currentUser} />} />
+          <Route path=":id" element={<AddAccount />} >
+            <Route index element={<AddAccountInformation />} />
+            <Route path="transcripts" element={<AddTranscripts />} />
+          </Route>
         </Route>
       </Route>
 

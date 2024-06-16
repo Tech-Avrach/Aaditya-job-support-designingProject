@@ -1,31 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { Container, Row, Col, Input, Button, CardBody, Table } from 'reactstrap';
+import { Container, Row, Col, Input, Button, CardBody, Table, Label, FormGroup } from 'reactstrap';
 import ModalComponent from './ModalComponent'
 import { useTable } from 'react-table';
 import { IoCheckmarkCircleOutline, IoCloseCircleOutline, IoEllipsisHorizontalCircleOutline, IoDocumentOutline } from 'react-icons/io5';
+import { useOutletContext } from 'react-router-dom';
 
 // import IconContainer from './IconContainer'; // Assuming IconContainer is a custom component
 
-const years = Array.from({ length: 30 }, (_, index) => ({
-    value: 2000 + index,
-    label: 2000 + index,
-  }));
-
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ].map((month, index) => ({ value: month, label: month }));
-
-const dummyData = Array.from({ length: 25 }, (_, index) => ({
-    id: index + 1,
-    type: `Account transcript ${index + 1}`,
-    from: years[index % years.length].value,
-    to: years[(index + 1) % years.length].value,
-    fiscalEnd: months[index % months.length].value,
-  }));
-
-
-  const getStatusIcon = (status) => {
+const getStatusIcon = (status) => {
     switch (status) {
         case 'success':
             return <IoCheckmarkCircleOutline style={{ color: 'green' }} />;
@@ -39,101 +21,102 @@ const dummyData = Array.from({ length: 25 }, (_, index) => ({
 };
 
 const AddTranscripts = () => {
+    const [userDetail] = useOutletContext()
 
-const data = useMemo(() => [
-    { year: 2013, type: 'Account Transcript - 1040', status: 'error', message: 'CAF check failed - No POA for this transcript', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2014, type: 'Account Transcript - 1040', status: 'error', message: 'CAF check failed - No POA for this transcript', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2015, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2016, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2017, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2018, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2019, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2020, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2021, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2022, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2023, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
-    { year: 2024, type: 'Account Transcript - 1040', status: 'pending', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' }
-], []);
+    const data = useMemo(() => [
+        { year: 2013, type: 'Account Transcript - 1040', status: 'error', message: 'CAF check failed - No POA for this transcript', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2014, type: 'Account Transcript - 1040', status: 'error', message: 'CAF check failed - No POA for this transcript', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2015, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2016, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2017, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2018, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2019, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2020, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2021, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2022, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2023, type: 'Account Transcript - 1040', status: 'success', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' },
+        { year: 2024, type: 'Account Transcript - 1040', status: 'pending', message: 'From TDS', lastCheck: 'Jun 12 2024 8:54am', date: '06/12/2024' }
+    ], []);
 
-const columns = useMemo(() => [
-    {
-        Header: '',
-        accessor: 'checkbox',
-        Cell: ({ row }) => (
-            <Input type="checkbox" />
-        )
-    },
-    {
-        Header: 'Year',
-        accessor: 'year'
-    },
-    {
-        Header: 'Type',
-        accessor: 'type'
-    },
-    {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: ({ value }) => {
-            switch (value) {
-                case 'success':
-                    return <IoCheckmarkCircleOutline fontSize={"25px"} style={{ color: 'green' }} />;
-                case 'error':
-                    return <IoCloseCircleOutline fontSize={"25px"} style={{ color: 'red' }} />;
-                case 'pending':
-                    return <IoEllipsisHorizontalCircleOutline fontSize={"25px"} style={{ color: 'orange' }} />;
-                default:
-                    return null;
+    const columns = useMemo(() => [
+        {
+            Header: '',
+            accessor: 'checkbox',
+            Cell: ({ row }) => (
+                <Input type="checkbox" />
+            )
+        },
+        {
+            Header: 'Year',
+            accessor: 'year'
+        },
+        {
+            Header: 'Type',
+            accessor: 'type'
+        },
+        {
+            Header: 'Status',
+            accessor: 'status',
+            Cell: ({ value }) => {
+                switch (value) {
+                    case 'success':
+                        return <IoCheckmarkCircleOutline fontSize={"25px"} style={{ color: 'green' }} />;
+                    case 'error':
+                        return <IoCloseCircleOutline fontSize={"25px"} style={{ color: 'red' }} />;
+                    case 'pending':
+                        return <IoEllipsisHorizontalCircleOutline fontSize={"25px"} style={{ color: 'orange' }} />;
+                    default:
+                        return null;
+                }
             }
+        },
+        {
+            Header: 'Message',
+            accessor: 'message'
+        },
+        {
+            Header: 'Last Check',
+            accessor: 'lastCheck'
+        },
+        {
+            Header: 'Date',
+            accessor: 'date'
+        },
+        {
+            Header: 'Transcript',
+            accessor: 'transcript',
+            Cell: () => (
+                <IoDocumentOutline />
+            )
         }
-    },
-    {
-        Header: 'Message',
-        accessor: 'message'
-    },
-    {
-        Header: 'Last Check',
-        accessor: 'lastCheck'
-    },
-    {
-        Header: 'Date',
-        accessor: 'date'
-    },
-    {
-        Header: 'Transcript',
-        accessor: 'transcript',
-        Cell: () => (
-            <IoDocumentOutline />
-        )
-    }
-], []);
+    ], []);
 
-const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-} = useTable({ columns, data });
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow
+    } = useTable({ columns, data });
 
-    const [open, setOpen] = useState(false)
-  return (
-    <Container fluid>
-      <Button onClick={() => setOpen(true)}>
-        Add Transcripts
-      </Button>
-      <ModalComponent
-        isOpen={open}
-        toggleModal={() => setOpen(!open)}
-        data={dummyData}
-        columns={columns}
-        // years={}
-        // months={}
-      />
+    return (
+        <Container fluid>
+            <FormGroup>
+                <Input
+                    id="selectAll"
+                    name="selectAll"
+                    type="checkbox"
+                // checked={selectAllChecked}
+                // onChange={handleSelectAllChange}
+                />
+                <Label for="select_all" className="ms-3">
+                    Select All
+                </Label>
+            </FormGroup>
             <Row>
                 <Col md="12">
                     <CardBody>
-                        <Table {...getTableProps()} bordered>
+                        <Table {...getTableProps()} >
                             <thead>
                                 {headerGroups.map(headerGroup => (
                                     <tr {...headerGroup.getHeaderGroupProps()}>
@@ -151,7 +134,7 @@ const {
                                     return (
                                         <tr {...row.getRowProps()}>
                                             {row.cells.map(cell => (
-                                                <td {...cell.getCellProps()}>
+                                                <td {...cell.getCellProps()} style={{ border: "none" }}>
                                                     {cell.render('Cell')}
                                                 </td>
                                             ))}
@@ -163,8 +146,8 @@ const {
                     </CardBody>
                 </Col>
             </Row>
-    </Container>
-  )
+        </Container>
+    )
 }
 
 export default AddTranscripts
