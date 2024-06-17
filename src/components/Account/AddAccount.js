@@ -59,7 +59,7 @@ const AddAccount = () => {
         <AddAccountInformation userDetail={userDetail} />
       ) : (
         <>
-          <Button onClick={() => setOpen(true)}>Add Transcripts</Button>
+          <Button color="primary" onClick={() => setOpen(true)}>Add Transcripts</Button>
           <Outlet context={[userDetail]} />
         </>
         // <Tabs

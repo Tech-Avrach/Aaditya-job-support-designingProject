@@ -16,7 +16,8 @@ const ModalComponent = ({ isOpen, toggleModal }) => {
   const months = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
-  ].map((month, index) => ({ value: month, label: month }));
+  ].map((month, index) => ({ value: month, label: month.substring(0, 3) }));
+  
 
   const data = Array.from({ length: 25 }, (_, index) => ({
     id: index + 1,
@@ -111,6 +112,7 @@ const ModalComponent = ({ isOpen, toggleModal }) => {
       <ModalHeader toggle={toggleModal} className="bg-primary text-center text-white">
         Add Transcript
       </ModalHeader>
+      
       <ModalBody style={{ maxHeight: "60vh", overflowY: "auto" }}>
         <Row>
           <Col md="12" className="text-center">

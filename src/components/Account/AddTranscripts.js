@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Container, Row, Col, Input, Button, CardBody, Table, Label, FormGroup } from 'reactstrap';
 import ModalComponent from './ModalComponent'
 import { useTable } from 'react-table';
-import { IoCheckmarkCircleOutline, IoCloseCircleOutline, IoEllipsisHorizontalCircleOutline, IoDocumentOutline } from 'react-icons/io5';
+import { IoCheckmarkCircleOutline, IoCloseCircleOutline, IoEllipsisHorizontalCircleOutline, IoDocumentOutline, IoRadioButtonOffSharp } from 'react-icons/io5';
 import { useOutletContext } from 'react-router-dom';
 
 // import IconContainer from './IconContainer'; // Assuming IconContainer is a custom component
@@ -64,7 +64,7 @@ const AddTranscripts = () => {
                     case 'error':
                         return <IoCloseCircleOutline fontSize={"25px"} style={{ color: 'red' }} />;
                     case 'pending':
-                        return <IoEllipsisHorizontalCircleOutline fontSize={"25px"} style={{ color: 'orange' }} />;
+                        return <IoRadioButtonOffSharp fontSize={"25px"} style={{ color: 'orange' }} />;
                     default:
                         return null;
                 }
@@ -102,7 +102,7 @@ const AddTranscripts = () => {
     return (
         <Container fluid>
             <FormGroup>
-                <Input
+                {/* <Input
                     id="selectAll"
                     name="selectAll"
                     type="checkbox"
@@ -111,13 +111,13 @@ const AddTranscripts = () => {
                 />
                 <Label for="select_all" className="ms-3">
                     Select All
-                </Label>
+                </Label> */}
             </FormGroup>
             <Row>
                 <Col md="12">
                     <CardBody>
                         <Table {...getTableProps()} >
-                            <thead>
+                            <thead className='text-primary'>
                                 {headerGroups.map(headerGroup => (
                                     <tr {...headerGroup.getHeaderGroupProps()}>
                                         {headerGroup.headers.map(column => (

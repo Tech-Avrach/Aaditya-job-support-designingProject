@@ -966,7 +966,7 @@ const AddAccountInformation = (props) => {
                 Cancel
               </Button>
               {id ? (
-                <Button size="lg" color="primary" onClick={updateHandler}>
+                <Button size="lg" color="primary" className="me-2" onClick={updateHandler}>
                   Save
                 </Button>
               ) : (
@@ -974,6 +974,12 @@ const AddAccountInformation = (props) => {
                   Add Account
                 </Button>
               )}
+              <Button size="lg" color="primary"className="me-2">
+                  Request Transcripts
+              </Button>
+              <Button size="lg" color="primary" className="me-2">
+                  Downlode Report
+              </Button>
             </CardFooter>
           </Form>
         </Card>
