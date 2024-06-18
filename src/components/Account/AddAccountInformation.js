@@ -1009,12 +1009,12 @@ const AddAccountInformation = (props) => {
                       Add Account
                     </Button>
                   )}
-                  <Button size="lg" color="primary" className="me-2">
+                  {/* <Button size="lg" color="primary" className="me-2">
                   Request Transcripts
               </Button>
               <Button size="lg" color="primary" className="me-2">
                   Download Report
-              </Button>
+              </Button> */}
                 </CardFooter>
               </Form>
             </Card>

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input, Button } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Input, Button, Label, FormGroup } from "reactstrap";
 import DataTable from "react-data-table-component";
 import "./modal.scss"; // Import your SCSS file
 import { useNavigate } from "react-router-dom";
@@ -103,7 +103,7 @@ const ModalComponent = ({ isOpen, toggleModal }) => {
 
   const handleSubmit = () => {
     // Handle API calls
-    navigate("transcripts")
+    navigate(`transcripts`)
     toggleModal()
   }
 
@@ -125,6 +125,18 @@ const ModalComponent = ({ isOpen, toggleModal }) => {
             Primary Text Heading
           </Col>
         </Row>
+        <FormGroup>
+                <Input
+                    id="selectAll"
+                    name="selectAll"
+                    type="checkbox"
+                // checked={selectAllChecked}
+                // onChange={handleSelectAllChange}
+                />
+                <Label for="select_all" className="ms-3">
+                    Select All
+                </Label>
+            </FormGroup>
         <DataTable
           columns={columns}
           data={data}

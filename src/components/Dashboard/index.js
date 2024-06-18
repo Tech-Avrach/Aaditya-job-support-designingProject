@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Row, Col, Container, CardBody, Input, Button, Label } from "reactstrap";
+import {
+  Row,
+  Col,
+  Container,
+  CardBody,
+  Input,
+  Button,
+  Label,
+} from "reactstrap";
 import PageContainer from "../Layout/PageContainer";
-import DataTableComponent from "../Tables/DataTable";
+import DataTable from "react-data-table-component";
 import FilterComponent from "../../helpers/FilterComponent";
 import debounceFunction from "../../helpers/Debounce";
 import * as Ionicons from "react-icons/io";
@@ -29,7 +37,9 @@ function Dashboard() {
   const [statusFilter, setStatusFilter] = useState({ active: "1,0" });
   const [filterText, setFilterText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(
+    process.env.REACT_APP_API_PAGINATION_LIMIT
+  );
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const handleFilterChange = (e) => {
     const newValue = e.target.value;
@@ -225,11 +235,10 @@ function Dashboard() {
 
   const handleDeleteConfirm = (e, id, action) => {
     // Perform the delete action here
-    console.log('Item deleted');
-    handleDelete(e,id,action)
+    console.log("Item deleted");
+    handleDelete(e, id, action);
     setModalOpen(false); // Close the modal after deletion
   };
-
 
   const columns = useMemo(
     () => [
@@ -367,10 +376,10 @@ function Dashboard() {
                 text={"Delete"}
                 iconColor={"#d92550"}
               />
-                <DeleteConfirmationModal
+              <DeleteConfirmationModal
                 isOpen={modalOpen}
                 toggle={toggleModal}
-                onConfirm={(e)=>handleDeleteConfirm(e, row.id, "delete")}
+                onConfirm={(e) => handleDeleteConfirm(e, row.id, "delete")}
               />
             </>
           ) : (
@@ -434,7 +443,7 @@ function Dashboard() {
           className="align-items-center mb-3 justify-content-between"
           style={{ width: "100%", margin: "auto" }}
         >
-            {/* <Input
+          {/* <Input
               type="select"
               value={statusFilter.active}
               onChange={handleFilterChange}
@@ -454,13 +463,11 @@ function Dashboard() {
             <Label className="ms-3">Select All</Label>
           </Col> */}
     
-          <Col md="2">
+          <Col md="4" className="d-flex gap-2 ">
             <Button size="lg" color="primary" onClick={handleAddAccount}>
               Add Account
             </Button>
-          </Col>
-          <Col md="2">
-           <Button size="lg" color="primary" onClick={handleAddAccount}>
+            <Button size="lg" color="primary" onClick={handleAddAccount}>
              Get Transcipts
             </Button>
           </Col>
@@ -471,18 +478,18 @@ function Dashboard() {
         <Row className="align-items-center mb-3">
           <Col md="12">
             <CardBody>
-              <DataTableComponent
+              <DataTable
                 columns={columns}
                 data={filteredData}
-                pagination
-                // paginationPerPage = '25'
+                selectableRows
+                // onSelectedRowsChange={handleChange}
+                // pagination
                 paginationServer
-                paginationTotalRows={totalUserCount}
+                // paginationTotalRows={totalUsers}
                 paginationDefaultPage={currentPage}
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}
-                subHeader={false}
-                // subHeaderComponent={subHeaderComponent}
+                subHeaderComponent={subHeaderComponent}
               />
             </CardBody>
           </Col>

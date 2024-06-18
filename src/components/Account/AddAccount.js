@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PageContainer from "../Layout/PageContainer";
 import AddAccountInformation from "./AddAccountInformation";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Navigate, Outlet, useNavigate, useParams } from "react-router-dom";
 import accountService from "../../redux/services/account.service";
 
 import Tabs, { TabPane } from "rc-tabs";
@@ -21,6 +21,7 @@ const AddAccount = () => {
   const [userDetail, setUserDetail] = useState({});
   const [open, setOpen] = useState(false)
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const getAccount = (id) => {
     accountService
@@ -44,7 +45,9 @@ const AddAccount = () => {
   };
 
   useEffect(() => {
-    id && getAccount(id);
+    if(id != "request-transcript") {
+      id && getAccount(id);
+    }
   }, [id]);
 
   return (
@@ -60,6 +63,10 @@ const AddAccount = () => {
         <>
           <Button color="primary" onClick={() => setOpen(true)}>Add Transcripts</Button>
           <Outlet context={[userDetail]} />
+          <div className="d-flex justify-content-center">
+            <Button color="primary" className="me-2" onClick={() => navigate("/account/request-transcript")}>Request Transcripts</Button>
+            <Button color="primary" className="me-2" >Download Transcripts</Button>
+          </div>
         </>
         // <Tabs
         //   defaultActiveKey="1"
