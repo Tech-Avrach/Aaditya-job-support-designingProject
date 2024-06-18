@@ -44,7 +44,6 @@ const AddAccount = () => {
   };
 
   useEffect(() => {
-
     id && getAccount(id);
   }, [id]);
 
