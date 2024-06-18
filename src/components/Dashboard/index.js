@@ -453,14 +453,15 @@ function Dashboard() {
           />
             <Label className="ms-3">Select All</Label>
           </Col> */}
-          {/* <Col md="2">
-           <Button size="lg" color="primary" onClick={handleAddAccount}>
-             Get Transcipts
-            </Button>
-          </Col> */}
+    
           <Col md="2">
             <Button size="lg" color="primary" onClick={handleAddAccount}>
               Add Account
+            </Button>
+          </Col>
+          <Col md="2">
+           <Button size="lg" color="primary" onClick={handleAddAccount}>
+             Get Transcipts
             </Button>
           </Col>
           <Col md="4">

@@ -44,22 +44,22 @@ const AddAccount = () => {
   };
 
   useEffect(() => {
-    if (id != "") {
-      getAccount(id);
-    }
+
+    id && getAccount(id);
   }, [id]);
 
   return (
     <PageContainer
       pageTitleIcon="pe-7s-add-user icon-gradient bg-plum-plate"
-      pageHeading={id != "" ? "Edit Account" : "Add Account"}
-      pageSubTitle={id != "" ? "Edit Account" : "Add new account"}
+      pageHeading={id ? "Edit Account" : "Add Account"}
+      pageSubTitle={id ? "Edit Account" : "Add new account"}
+
     >
       {!id ? (
         <AddAccountInformation userDetail={userDetail} />
       ) : (
         <>
-          <Button onClick={() => setOpen(true)}>Add Transcripts</Button>
+          <Button color="primary" onClick={() => setOpen(true)}>Add Transcripts</Button>
           <Outlet context={[userDetail]} />
         </>
         // <Tabs

@@ -45,3 +45,14 @@ table tr td {
   position: absolute;
   z-index: 9999;
 }
+
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.no-select:focus-visible {
+  outline: none;
+}
