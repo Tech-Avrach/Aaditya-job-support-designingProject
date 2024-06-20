@@ -1,4 +1,5 @@
 import React from "react";
+import { Input } from "reactstrap";
 
 const QuarterPicker = ({ selectedQuarter, handleChange, name }) => {
   const quarters = [
@@ -9,8 +10,9 @@ const QuarterPicker = ({ selectedQuarter, handleChange, name }) => {
   ];
 
   return (
-    <select
-      style={{ padding: "3px 5px", width: "75px" }}
+    <Input
+      type="select"
+      style={{ padding: "3px 5px" }}
       id="quarter-picker"
       name={name}
       value={selectedQuarter}
@@ -21,7 +23,7 @@ const QuarterPicker = ({ selectedQuarter, handleChange, name }) => {
           {quarter.label}
         </option>
       ))}
-    </select>
+    </Input>
   );
 };
 

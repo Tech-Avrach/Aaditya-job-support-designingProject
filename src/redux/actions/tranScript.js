@@ -3,6 +3,7 @@ import {
   CREATE_TRANSCRIPTREQUEST,
   RETRIEVE_TRANSCRIPTREQUEST,
   RETRIEVE_COMBINED_TRANSCRIPTREQUEST,
+  ADD_TRANSCRIPTREQUEST_LOCAL,
 } from "./types";
 
 export const createTranscript = (data) => async (dispatch) => {
@@ -47,4 +48,11 @@ export const getCombinedTranscript = (data) => async (dispatch) => {
   } catch (err) {
     return Promise.reject(err);
   }
+};
+
+export const addTranscripttolocal = (data) => async (dispatch) => {
+  dispatch({
+    type: ADD_TRANSCRIPTREQUEST_LOCAL,
+    payload: data,
+  });
 };

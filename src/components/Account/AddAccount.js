@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import PageContainer from "../Layout/PageContainer";
 import AddAccountInformation from "./AddAccountInformation";
-import { Link, Navigate, Outlet, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import accountService from "../../redux/services/account.service";
 
 import Tabs, { TabPane } from "rc-tabs";
@@ -11,15 +17,16 @@ import { toast, Slide } from "react-toastify";
 import RequestTranscripts from "./RequestTranscripts";
 import AvailableTranscripts from "./AvailableTranscripts";
 import "react-toastify/dist/ReactToastify.css";
-import AddTranscripts from "./AddTranscripts";
+// import AddTranscripts from "./AddTranscripts";
 import { Button } from "reactstrap";
 import ModalComponent from "./ModalComponent";
 
 toast.configure();
 
 const AddAccount = () => {
+  const [transcripts, setTranscripts] = useState();
   const [userDetail, setUserDetail] = useState({});
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -44,8 +51,13 @@ const AddAccount = () => {
       });
   };
 
+  const hanldeSetTranscript = (values) => {
+    console.log("values", values);
+    // setTranscripts();
+  };
+
   useEffect(() => {
-    if(id != "request-transcript") {
+    if (id != "request-transcript") {
       id && getAccount(id);
     }
   }, [id]);
@@ -55,17 +67,24 @@ const AddAccount = () => {
       pageTitleIcon="pe-7s-add-user icon-gradient bg-plum-plate"
       pageHeading={id ? "Edit Account" : "Add Account"}
       pageSubTitle={id ? "Edit Account" : "Add new account"}
-
     >
       {!id ? (
         <AddAccountInformation userDetail={userDetail} />
       ) : (
         <>
-          <Button color="primary" onClick={() => setOpen(true)}>Add Transcripts</Button>
+          {/* <Button color="primary" onClick={() => setOpen(true)}>Add Transcripts</Button> */}
           <Outlet context={[userDetail]} />
           <div className="d-flex justify-content-center">
-            <Button color="primary" className="me-2" onClick={() => navigate("/account/request-transcript")}>Request Transcripts</Button>
-            <Button color="primary" className="me-2" >Download Transcripts</Button>
+            <Button
+              color="primary"
+              className="me-2"
+              onClick={() => navigate("/account/request-transcript")}
+            >
+              Request Transcripts
+            </Button>
+            <Button color="primary" className="me-2">
+              Download Transcripts
+            </Button>
           </div>
         </>
         // <Tabs
@@ -95,8 +114,9 @@ const AddAccount = () => {
         // </Tabs>
       )}
       <ModalComponent
-          isOpen={open}
-          toggleModal={() => setOpen(!open)}
+        isOpen={open}
+        toggleModal={() => setOpen(!open)}
+        userDetail={userDetail}
       />
     </PageContainer>
   );

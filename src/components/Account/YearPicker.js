@@ -1,4 +1,5 @@
 import React from "react";
+import { Input } from "reactstrap";
 
 const YearPicker = ({
   minYear = 1990,
@@ -6,7 +7,7 @@ const YearPicker = ({
   selectedYear,
   handleChange,
   name,
-  value
+  value,
 }) => {
   if (!maxYear) {
     maxYear = new Date().getFullYear();
@@ -19,9 +20,8 @@ const YearPicker = ({
 
   return (
     <>
-      <select
-        // border: "1px solid red"
-        style={{ padding: "6px 7px" }}
+      <Input
+        type="select"
         id="year-picker"
         name={name}
         value={value}
@@ -32,7 +32,7 @@ const YearPicker = ({
             {year}
           </option>
         ))}
-      </select>
+      </Input>
     </>
   );
 };

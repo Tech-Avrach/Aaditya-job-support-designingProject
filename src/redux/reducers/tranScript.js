@@ -1,10 +1,15 @@
 import {
+  ADD_TRANSCRIPTREQUEST_LOCAL,
   CREATE_TRANSCRIPTREQUEST,
   RETRIEVE_COMBINED_TRANSCRIPTREQUEST,
   RETRIEVE_TRANSCRIPTREQUEST,
 } from "../actions/types";
 
-const initialState = { tranScriptDetails: [], createdTranScript: {} };
+const initialState = {
+  tranScriptDetails: [],
+  createdTranScript: {},
+  selectedTranScript: [],
+};
 
 const transcriptReducer = (state = initialState, action) => {
   const { type, payload } = action;
@@ -24,6 +29,11 @@ const transcriptReducer = (state = initialState, action) => {
     case RETRIEVE_COMBINED_TRANSCRIPTREQUEST:
       return {
         ...state,
+      };
+    case ADD_TRANSCRIPTREQUEST_LOCAL:
+      return {
+        ...state,
+        selectedTranScript: payload,
       };
     default:
       return state;

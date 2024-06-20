@@ -32,7 +32,7 @@ const EditIcon = Ionicons["IoIosCreate"];
 toast.configure();
 
 const AddAccountInformation = (props) => {
-  const [userDetail] = useOutletContext()|| []
+  const [userDetail] = useOutletContext() || [];
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -57,7 +57,7 @@ const AddAccountInformation = (props) => {
   const [selectedName, setSelectedName] = useState(null);
   const [type, setType] = useState(0);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [isView, setIsView ] = useState(false)
+  const [isView, setIsView] = useState(false);
 
   //input change handler
   const handleInputChange = (event) => {
@@ -575,7 +575,9 @@ const AddAccountInformation = (props) => {
   }, []);
 
   useEffect(() => {
-    id && hanldeViewPage();
+    // id && hanldeViewPage();
+    id && setIsView(false);
+
   }, [id]);
 
   useEffect(() => {
@@ -590,7 +592,7 @@ const AddAccountInformation = (props) => {
 
   return (
     <>
-      {isView ? (
+      {!isView  && id ? (
         <ViewAccount
           hanldeViewPage={hanldeViewPage}
           userDetail={userDetail}
@@ -608,7 +610,6 @@ const AddAccountInformation = (props) => {
                 handleOnClick={() => {
                   hanldeViewPage();
                 }}
-      
               />
             </Col>
           )}
@@ -1001,11 +1002,21 @@ const AddAccountInformation = (props) => {
                     Cancel
                   </Button>
                   {id ? (
-                    <Button size="lg" color="primary" className="me-2" onClick={updateHandler}>
+                    <Button
+                      size="lg"
+                      color="primary"
+                      className="me-2"
+                      onClick={updateHandler}
+                    >
                       Save
                     </Button>
                   ) : (
-                    <Button size="lg" color="primary" className="me-2" onClick={addHandler}>
+                    <Button
+                      size="lg"
+                      color="primary"
+                      className="me-2"
+                      onClick={addHandler}
+                    >
                       Add Account
                     </Button>
                   )}

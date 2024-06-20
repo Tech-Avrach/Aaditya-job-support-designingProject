@@ -38,14 +38,14 @@ const TableComponent = ({
               <td>{item.formNumber}</td>
               <td>
                 <YearPicker
-                  minYear={minYear}
-                  maxYear={maxYear}
-                  selectedYear={item.fromTaxYear}
-                  handleChange={(e) =>
-                    handleYearChange(index, "fromTaxYear", e.target.value)
-                  }
-                  name={`fromTaxYear-${index}`}
-                  value={item.fromTaxYear}
+                  // minYear={minYear}
+                  // maxYear={maxYear}
+                  // selectedYear={item.fromTaxYear}
+                  // handleChange={(e) =>
+                  //   handleYearChange(index, "fromTaxYear", e.target.value)
+                  // }
+                  // name={`fromTaxYear-${index}`}
+                  // value={item.fromTaxYear}
                 />
               </td>
               <td>

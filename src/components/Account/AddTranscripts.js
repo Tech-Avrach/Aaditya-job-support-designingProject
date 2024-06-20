@@ -207,7 +207,7 @@ const AddTranscripts = () => {
                     <div>
                         <OverlayTrigger
                             placement="right"
-                            overlay={<Tooltip id="tooltip-top">Copy</Tooltip>}
+                            overlay={<Tooltip id="tooltip-top">Download</Tooltip>}
                         >
                             <span style={{ cursor: "pointer" }}>
                                 <IoDocumentOutline size={18} />
@@ -256,7 +256,7 @@ const AddTranscripts = () => {
                                 {rows.map((row) => {
                                     prepareRow(row);
                                     return (
-                                        <tr {...row.getRowProps()} >
+                                        <tr style={{textAlign:"center"}} {...row.getRowProps()} >
                                             {row.cells.map((cell) => (
                                                 <td {...cell.getCellProps()} style={{ border: "none" }}>
                                                     {cell.render("Cell")}
