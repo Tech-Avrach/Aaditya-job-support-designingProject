@@ -5,6 +5,7 @@ import {
   Link,
   Navigate,
   Outlet,
+  useLocation,
   useNavigate,
   useParams,
 } from "react-router-dom";
@@ -26,9 +27,23 @@ toast.configure();
 const AddAccount = () => {
   const [transcripts, setTranscripts] = useState();
   const [userDetail, setUserDetail] = useState({});
-  const [open, setOpen] = useState(false);
-  const { id } = useParams();
+  const { id, transcript } = useParams();
+  const {pathname}=  useLocation()
+    console.log(pathname);
+    console.log();
+    const isHideRequestTranscript =  pathname.includes("request-transcript")
   const navigate = useNavigate();
+
+  let pageTitle = "Edit Account";
+  let pageSubTitle = "Edit Account";
+
+  if (pathname.includes("request-transcript")) {
+    pageTitle = "Request Transcript";
+    pageSubTitle = "Request Transcript";
+  } else if (pathname.includes("add")) {
+    pageTitle = "Add Account";
+    pageSubTitle = "Add new account";
+  }
 
   const getAccount = (id) => {
     accountService
@@ -57,34 +72,36 @@ const AddAccount = () => {
   };
 
   useEffect(() => {
-    if (id != "request-transcript") {
       id && getAccount(id);
-    }
   }, [id]);
+
+  console.log(transcript)
 
   return (
     <PageContainer
       pageTitleIcon="pe-7s-add-user icon-gradient bg-plum-plate"
-      pageHeading={id ? "Edit Account" : "Add Account"}
-      pageSubTitle={id ? "Edit Account" : "Add new account"}
+      pageHeading={pageTitle}
+      pageSubTitle={pageSubTitle}
     >
       {!id ? (
         <AddAccountInformation userDetail={userDetail} />
       ) : (
         <>
-          {/* <Button color="primary" onClick={() => setOpen(true)}>Add Transcripts</Button> */}
+          {/* */}
           <Outlet context={[userDetail]} />
           <div className="d-flex justify-content-center">
-            <Button
+          {!isHideRequestTranscript &&   <Button
               color="primary"
               className="me-2"
-              onClick={() => navigate("/account/request-transcript")}
-            >
+              onClick={() => navigate(`/account/${id}/request-transcript`)}
+              >
               Request Transcripts
-            </Button>
+            </Button>}
+
+            {!isHideRequestTranscript &&   
             <Button color="primary" className="me-2">
               Download Transcripts
-            </Button>
+            </Button>}
           </div>
         </>
         // <Tabs
@@ -113,11 +130,7 @@ const AddAccount = () => {
         //   )}
         // </Tabs>
       )}
-      <ModalComponent
-        isOpen={open}
-        toggleModal={() => setOpen(!open)}
-        userDetail={userDetail}
-      />
+    
     </PageContainer>
   );
 };

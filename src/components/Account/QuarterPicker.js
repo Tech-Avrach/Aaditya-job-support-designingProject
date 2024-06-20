@@ -12,7 +12,7 @@ const QuarterPicker = ({ selectedQuarter, handleChange, name }) => {
   return (
     <Input
       type="select"
-      style={{ padding: "3px 5px" }}
+      // style={{ padding: "3px 5px" }}
       id="quarter-picker"
       name={name}
       value={selectedQuarter}

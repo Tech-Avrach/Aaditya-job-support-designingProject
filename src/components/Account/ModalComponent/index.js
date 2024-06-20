@@ -339,6 +339,34 @@ const navigate = useNavigate()
   const columns = useMemo(
     () => [
       {
+        name: <Input type="checkbox" />,
+        selector: "formNumber",
+        center: true,
+        width: "60px",
+        cell: (row, index) => {
+          // Corrected the way to define variable inside the cell function
+          const _checked = row.isChecked; // Assuming 'isChecked' is the correct field name
+
+          return (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Input
+                type="checkbox"
+                // className="me-5"
+                checked={_checked}
+                onChange={() => handleYearChange(index, "isChecked", !_checked)}
+              />
+              {/* {`Account Transcript - ${row.formNumber}`} */}
+            </div>
+          );
+        },
+      },
+      {
         name: "Form No",
         selector: "formNumber",
         center: true,
@@ -355,12 +383,12 @@ const navigate = useNavigate()
                 justifyContent: "flex-start",
               }}
             >
-              <Input
+              {/* <Input
                 type="checkbox"
                 className="me-5"
                 checked={_checked}
                 onChange={() => handleYearChange(index, "isChecked", !_checked)}
-              />
+              /> */}
               {`Account Transcript - ${row.formNumber}`}
             </div>
           );
@@ -370,68 +398,103 @@ const navigate = useNavigate()
         name: "From",
         selector: "fromTaxYear",
         center: true,
+        width: "250px",
         cell: (row, index) => (
-          <YearPicker
-            minYear={+row.minYear}
-            maxYear={row.maxYear}
-            handleChange={(e) =>
-              handleYearChange(index, "fromTaxYear", e.target.value)
-            }
-            name={`fromTaxYear-${index}`}
-            value={row.fromTaxYear}
-          />
+          <>
+            <YearPicker
+              minYear={+row.minYear}
+              maxYear={row.maxYear}
+              handleChange={(e) =>
+                handleYearChange(index, "fromTaxYear", e.target.value)
+              }
+              name={`fromTaxYear-${index}`}
+              value={row.fromTaxYear}
+            />
+            
+            {row.showQuarter ? (
+              <QuarterPicker
+                selectedYear={row.fromTaxYear}
+                handleChange={(e) =>
+                  handleYearChange(index, "quarterFrom", e.target.value)
+                }
+                name={`quarterFrom-${index}`}
+                value={row.quarterFrom}
+                className="py-5"
+              />
+            ) : null}
+          </>
         ),
       },
-      ,
+      
       {
         name: "To",
         selector: "toTaxYear",
         center: true,
+        width: "250px",
         cell: (row, index) => (
-          <YearPicker
-            minYear={+row.minYear}
-            maxYear={row.maxYear}
-            handleChange={(e) =>
-              handleYearChange(index, "toTaxYear", e.target.value)
-            }
-            name={`toTaxYear-${index}`}
-            value={row.toTaxYear}
-          />
+          <>
+            <YearPicker
+              minYear={+row.minYear}
+              maxYear={row.maxYear}
+              handleChange={(e) =>
+                handleYearChange(index, "toTaxYear", e.target.value)
+              }
+              name={`toTaxYear-${index}`}
+              value={row.toTaxYear}
+            />
+            {row.showQuarter ? (
+              <QuarterPicker
+                selectedYear={row.toTaxYear}
+                handleChange={(e) =>
+                  handleYearChange(index, "quarterTo", e.target.value)
+                }
+                name={`quarterTo-${index}`}
+                value={row.quarter}
+              />
+            ) : null}
+          </>
         ),
       },
-      {
-        name: "Fiscal Start",
-        selector: "quarterFrom",
-        center: true,
-        sortable: true,
-        cell: (row, index) =>
-          row.showQuarter ? (
-            <QuarterPicker
-              selectedYear={row.fromTaxYear}
-              handleChange={(e) =>
-                handleYearChange(index, "quarterFrom", e.target.value)
-              }
-              name={`quarterFrom-${index}`}
-              value={row.quarterFrom}
-            />
-          ) : null,
-      },
+      
+      // {
+      //   name: "Fiscal Start",
+      //   selector: "quarterFrom",
+      //   center: true,
+      //   sortable: true,
+      //   cell: (row, index) =>
+      //     row.showQuarter ? (
+      //       <QuarterPicker
+      //         selectedYear={row.fromTaxYear}
+      //         handleChange={(e) =>
+      //           handleYearChange(index, "quarterFrom", e.target.value)
+      //         }
+      //         name={`quarterFrom-${index}`}
+      //         value={row.quarterFrom}
+      //       />
+      //     ) : null,
+      // },
       {
         name: "Fiscal End",
         selector: "quarterTo",
         center: true,
         sortable: true,
-        cell: (row, index) =>
-          row.showQuarter ? (
-            <QuarterPicker
-              selectedYear={row.toTaxYear}
-              handleChange={(e) =>
-                handleYearChange(index, "quarterTo", e.target.value)
-              }
-              name={`quarterTo-${index}`}
-              value={row.quarter}
-            />
-          ) : null,
+        width: "120px",
+        cell: (row, index) => (
+          !row.showQuarter ? (
+            <Input
+              type="select"
+              value={row.fiscalEnd}
+              className="custom-dropdown-width"
+              onChange={() => {}}
+            >
+              {months.map((month) => (
+                <option key={month.value} value={month.value}>
+                  {month.label}
+                </option>
+              ))}
+            </Input>
+          ) : null
+        ),
       },
     ],
     [handleCheckboxChange, handleYearChange, handleMonthChange, years, months]
@@ -460,7 +523,7 @@ const navigate = useNavigate()
 
   const handleSubmit = () => {
     // Handle API calls
-    navigate("transcripts");
+    // navigate("transcripts");
     toggleModal();
 
     const payload = handlePayload();
@@ -485,7 +548,7 @@ const navigate = useNavigate()
             {/* <h4 className="text-primary">Add Transcript</h4> */}
           </Col>
         </Row>
-        <Row>
+        {/* <Row>
           <Col md="3" className="text-primary">
             Primary Text Heading
           </Col>
@@ -501,21 +564,22 @@ const navigate = useNavigate()
           <Label for="select_all" className="ms-3">
             Select All
           </Label>
-        </FormGroup>
+        </FormGroup> */}
         <DataTable
           columns={columns}
           data={transcripts}
           pagination={false} // Hide pagination
           sortable
           highlightOnHover
-          striped
+          // striped
           dense
           noHeader // Hide DataTable header to use custom headers
           customStyles={{
             rows: {
               style: {
                 minHeight: "60px", // Increased row height
-                padding: "8px", // Increased padding for rows
+                paddingTop: "8px", // Added padding from the top
+                paddingBottom: "8px", // Added padding from the bottom
               },
             },
             headRow: {

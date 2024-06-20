@@ -40,7 +40,25 @@ const ViewAccount = ({ hanldeViewPage, userDetail, taxProList }) => {
 
   return (
     <Row>
-      <Col md={{ size: 1, offset: 11 }}>
+      {/* <Col md={{ size: 1, offset: 11 }}>
+        <IconContainer
+          id="edit-icon"
+          fontSize={"25px"}
+          Icon={EditIcon}
+          handleOnClick={() => {
+            hanldeViewPage();
+          }}
+          text="Edit"
+        /> 
+      </Col> */}
+      <Col md="12">
+      
+        <Card className="main-card mb-3">
+          
+          <Form>
+            <CardBody>
+              
+      <Col md={{ size: 1, offset: 11 }} className="text-end">
         <IconContainer
           id="edit-icon"
           fontSize={"25px"}
@@ -51,10 +69,6 @@ const ViewAccount = ({ hanldeViewPage, userDetail, taxProList }) => {
           text="Edit"
         />
       </Col>
-      <Col md="12">
-        <Card className="main-card mb-3">
-          <Form>
-            <CardBody>
               <Row>
                 <Col md="4">
                   <FormGroup>

@@ -77,9 +77,9 @@ const AppMain = () => {
           <Route path="list" key="list" element={<Dashboard />} />
           <Route path=":id" element={<AddAccount />}>
             <Route index element={<AddAccountInformation />} />
-            <Route path="transcripts" element={<AddTranscripts />} />
+            <Route path="request-transcript" element={<AddTranscripts />} />
           </Route>
-          <Route path="request-transcript" element={<AddRequest />} />
+          {/* <Route path="" element={<AddTranscripts />} /> */}
         </Route>
       </Route>
 

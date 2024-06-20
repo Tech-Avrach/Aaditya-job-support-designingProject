@@ -1,0 +1,26 @@
+.status-icon {
+    font-size: 30px;
+}
+.status-icon.success {
+    color: green;
+}
+.status-icon.error {
+    color: red;
+}
+.status-icon.pending {
+    color: orange;
+}
+.transcript-icon {
+    cursor: pointer;
+}
+
+.gocYik {
+    border-bottom: 2px solid #545cd8 !important;
+}
+.dqNdCj:not(:last-of-type) {
+    border-bottom: none !important;
+    
+}
+.rdt_TableRow:nth-child(even) {
+        background-color: transparent !important;
+}

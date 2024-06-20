@@ -1,48 +1,40 @@
-import React, { useMemo, useState } from "react";
-import {
-    Container,
-    Row,
-    Col,
-    Input,
-    Button,
-    CardBody,
-    Table,
-    Label,
-    FormGroup,
-} from "reactstrap";
-import ModalComponent from "./ModalComponent";
-import { useTable } from "react-table";
+import React, { useState, useMemo } from "react";
+import { Container, Row, Col, Button, CardBody } from "reactstrap";
+import DataTable from "react-data-table-component";
 import {
     IoCheckmarkCircleOutline,
     IoCloseCircleOutline,
     IoEllipsisHorizontalCircleOutline,
     IoDocumentOutline,
-    IoRadioButtonOffSharp,
 } from "react-icons/io5";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useOutletContext } from "react-router-dom";
+ import ModalComponent from "./ModalComponent";
 
-// import IconContainer from './IconContainer'; // Assuming IconContainer is a custom component
+ import './AddTranscripts.scss'
+ ; // Assuming you have a corresponding CSS file
 
 const getStatusIcon = (status) => {
     switch (status) {
         case "success":
-            return <IoCheckmarkCircleOutline style={{ color: "green" }} />;
+            return <IoCheckmarkCircleOutline className="status-icon success" />;
         case "error":
-            return <IoCloseCircleOutline style={{ color: "red" }} />;
+            return <IoCloseCircleOutline className="status-icon error" />;
         case "pending":
-            return <IoEllipsisHorizontalCircleOutline style={{ color: "orange" }} />;
+            return <IoEllipsisHorizontalCircleOutline className="status-icon pending" />;
         default:
             return null;
     }
 };
 
 const AddTranscripts = () => {
-    const [userDetail] = useOutletContext();
+    const [userDetail] = useOutletContext() || [];
+    const [open, setOpen] = useState(false);
 
     const data = useMemo(
         () => [
             {
+                id: 1,
                 year: 2013,
                 type: "Account Transcript - 1040",
                 status: "error",
@@ -51,6 +43,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 2,
                 year: 2014,
                 type: "Account Transcript - 1040",
                 status: "error",
@@ -59,6 +52,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 3,
                 year: 2015,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -67,6 +61,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 4,
                 year: 2016,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -75,6 +70,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 5,
                 year: 2017,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -83,6 +79,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 6,
                 year: 2018,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -91,6 +88,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 7,
                 year: 2019,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -99,6 +97,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 8,
                 year: 2020,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -107,6 +106,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 9,
                 year: 2021,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -115,6 +115,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 10,
                 year: 2022,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -123,6 +124,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 11,
                 year: 2023,
                 type: "Account Transcript - 1040",
                 status: "success",
@@ -131,6 +133,7 @@ const AddTranscripts = () => {
                 date: "06/12/2024",
             },
             {
+                id: 12,
                 year: 2024,
                 type: "Account Transcript - 1040",
                 status: "pending",
@@ -145,128 +148,116 @@ const AddTranscripts = () => {
     const columns = useMemo(
         () => [
             {
-                Header: "",
-                accessor: "checkbox",
-                Cell: ({ row }) => <Input type="checkbox" />,
+                name: "Year",
+                selector: row => row.year,
+                sortable: true,
+                width: "100px", // Adjusted width for Year column
             },
             {
-                Header: "Year",
-                accessor: "year",
+                name: "Type",
+                selector: row => row.type,
+                sortable: true,
+                grow: 2, // Increased width for Type column
             },
             {
-                Header: "Type",
-                accessor: "type",
+                name: "Status",
+                selector: row => row.status,
+                cell: row => getStatusIcon(row.status),
+                sortable: true,
             },
             {
-                Header: "Status",
-                accessor: "status",
-                Cell: ({ value }) => {
-                    switch (value) {
-                        case "success":
-                            return (
-                                <IoCheckmarkCircleOutline
-                                    fontSize={"25px"}
-                                    style={{ color: "green" }}
-                                />
-                            );
-                        case "error":
-                            return (
-                                <IoCloseCircleOutline
-                                    fontSize={"25px"}
-                                    style={{ color: "red" }}
-                                />
-                            );
-                        case "pending":
-                            return (
-                                <IoRadioButtonOffSharp
-                                    fontSize={"25px"}
-                                    style={{ color: "orange" }}
-                                />
-                            );
-                        default:
-                            return null;
-                    }
-                },
+                name: "Message",
+                selector: row => row.message,
+                sortable: true,
             },
             {
-                Header: "Message",
-                accessor: "message",
+                name: "Last Check",
+                selector: row => row.lastCheck,
+                sortable: true,
             },
             {
-                Header: "Last Check",
-                accessor: "lastCheck",
+                name: "Date",
+                selector: row => row.date,
+                sortable: true,
             },
             {
-                Header: "Date",
-                accessor: "date",
-            },
-            {
-                Header: "Transcript",
-                accessor: "transcript",
-                Cell: () => (
-                    <div>
-                        <OverlayTrigger
-                            placement="right"
-                            overlay={<Tooltip id="tooltip-top">Download</Tooltip>}
-                        >
-                            <span style={{ cursor: "pointer" }}>
-                                <IoDocumentOutline size={18} />
-                            </span>
-                        </OverlayTrigger>
-                    </div>
+                name: "Transcript",
+                cell: row => (
+                    <OverlayTrigger
+                        placement="right"
+                        overlay={<Tooltip id="tooltip-top">Download</Tooltip>}
+                    >
+                        <span className="transcript-icon">
+                            <IoDocumentOutline size={20} /> {/* Reduced size of icon */}
+                        </span>
+                    </OverlayTrigger>
                 ),
+                ignoreRowClick: true,
+                allowOverflow: true,
+                button: true,
             },
         ],
         []
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable({ columns, data });
+    const customStyles = {
+        headCells: {
+            style: {
+                border: 'none',
+                backgroundColor: 'transparent', // Removing background color
+            },
+        },
+        cells: {
+            style: {
+                border: 'none',
+                backgroundColor: 'transparent', // Removing background color
+            },
+        },
+        rows: {
+            style: {
+                border: 'none',
+                backgroundColor: 'transparent', // Removing background color
+            },
+        },
+        table: {
+            style: {
+                border: 'none',
+                backgroundColor: 'transparent', // Removing background color
+            },
+        },
+        rowsEven: {
+            style: {
+                backgroundColor: 'transparent', // Removing background color for even rows
+            },
+        },
+        rowsOdd: {
+            style: {
+                backgroundColor: 'transparent', // Removing background color for odd rows
+            },
+        },
+    };
 
     return (
         <Container fluid>
-            <FormGroup>
-                <Input
-                    id="selectAll"
-                    name="selectAll"
-                    type="checkbox"
-                // checked={selectAllChecked}
-                // onChange={handleSelectAllChange}
-                />
-                <Label for="select_all" className="ms-3">
-                    Select All
-                </Label>
-            </FormGroup>
+            <Button color="primary" onClick={() => setOpen(true)} className="me-2">Add Transcripts</Button>
+            <Button color="primary" className="me-2">
+                Download Transcripts
+            </Button>
+            <ModalComponent
+                isOpen={open}
+                toggleModal={() => setOpen(!open)}
+                userDetail={userDetail}
+            />
             <Row>
                 <Col md="12">
                     <CardBody>
-                        <Table {...getTableProps()}>
-                            <thead className="text-primary">
-                                {headerGroups.map((headerGroup) => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map((column) => (
-                                            <th {...column.getHeaderProps()} className="text-center">
-                                                {column.render("Header")}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyProps()}>
-                                {rows.map((row) => {
-                                    prepareRow(row);
-                                    return (
-                                        <tr style={{textAlign:"center"}} {...row.getRowProps()} >
-                                            {row.cells.map((cell) => (
-                                                <td {...cell.getCellProps()} style={{ border: "none" }}>
-                                                    {cell.render("Cell")}
-                                                </td>
-                                            ))}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
+                        <DataTable
+                            columns={columns}
+                            data={data}
+                            selectableRows
+                            pagination={false} // Hide pagination
+                            customStyles={customStyles}
+                        />
                     </CardBody>
                 </Col>
             </Row>
